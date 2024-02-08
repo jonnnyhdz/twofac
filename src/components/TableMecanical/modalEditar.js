@@ -18,13 +18,31 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
   const [servicios, setServicios] = useState([]);
   const [piezas, setPiezas] = useState([]);
 
+  // useEffect(() => {
+  //   if (selectedRow) {
+  //     setFormData({
+  //       nombreCliente: selectedRow.nombreCliente,
+  //       modeloVehiculo: selectedRow.modeloVehiculo,
+  //       servicioId: selectedRow.servicios[0]?.id || "", // Extraer ID del servicio
+  //       piezaId: selectedRow.piezas[0]?.id || "",       // Extraer ID de la pieza
+  //       comentarios: selectedRow.comentarios,
+  //       valorPieza: selectedRow.valorPieza,
+  //       tiempo: selectedRow.tiempo,
+  //       precioTotal: selectedRow.precioTotal,
+  //       estatus: selectedRow.estatus,
+  //     });
+  //   }
+  // }, [selectedRow]);
+
   useEffect(() => {
     if (selectedRow) {
       setFormData({
         nombreCliente: selectedRow.nombreCliente,
         modeloVehiculo: selectedRow.modeloVehiculo,
-        servicioId: selectedRow.servicios[0]?.id || "", // Extraer ID del servicio
-        piezaId: selectedRow.piezas[0]?.id || "",       // Extraer ID de la pieza
+        // Verifica si `selectedRow.servicios` existe antes de intentar acceder a su primer elemento
+        servicioId: selectedRow.servicios && selectedRow.servicios.length > 0 ? selectedRow.servicios[0].id : "",
+        // Verifica si `selectedRow.piezas` existe antes de intentar acceder a su primer elemento
+        piezaId: selectedRow.piezas && selectedRow.piezas.length > 0 ? selectedRow.piezas[0].id : "",
         comentarios: selectedRow.comentarios,
         valorPieza: selectedRow.valorPieza,
         tiempo: selectedRow.tiempo,
@@ -33,6 +51,7 @@ function EditarDatosModal({ onClose, onEditarDatos, selectedRow }) {
       });
     }
   }, [selectedRow]);
+  
 
   useEffect(() => {
     // Cargar la lista de servicios

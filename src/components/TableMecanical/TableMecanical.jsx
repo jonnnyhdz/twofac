@@ -46,6 +46,7 @@ function TableMecanical() {
 
   const handleDeleteClick = async (row) => {
     try {
+      console.log(".a.a.a.a-", row)
       if (!row.id || data.findIndex(item => item.id === row.id) === -1) {
         console.error('ID de registro no válido o no encontrado');
         alert('ID de registro no válido o no encontrado');

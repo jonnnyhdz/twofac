@@ -12,16 +12,20 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
     costoTotal: 0,
   });
 
-  const [tiempo, setTiempo] = useState(0);
   const [servicios, setServicios] = useState([]);
   const [piezas, setPiezas] = useState([]);
 
   useEffect(() => {
-    cargarServicios();
-    cargarPiezas();
+    const cargarDatos = async () => {
+      await cargarServicios();
+      await cargarPiezas();
+    };
+    cargarDatos();
+  }, []);
+
+  useEffect(() => {
+    // Recalcular el costo total cada vez que servicios o piezas cambian
     calcularCostoTotal();
-    // Restaurar tiempo a 0 al cargar el modal
-    setTiempo(0);
   }, [formData.servicios, formData.piezas]);
 
   const cargarServicios = async () => {
@@ -42,82 +46,54 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value, type } = e.target;
-
-    if (type === 'checkbox') {
-      // Manejar la selección de servicios y piezas usando checkboxes
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: e.target.checked
-          ? [...prevData[name], JSON.parse(value)] // Parsea el valor antes de agregarlo
-          : prevData[name].filter((item) => JSON.stringify(item) !== value),
-      }));
-    } else {
-      // Manejar otros campos
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-  };
-
   const handleAgregar = async () => {
+    // Preparar los datos para enviar, incluyendo el mapeo de servicios y piezas seleccionados
     const nuevosDatos = {
       nombreCliente: formData.nombreCliente,
       modeloVehiculo: formData.modeloVehiculo,
-      servicio_id: formData.servicios.map((servicio) => servicio.id),
-      piezas_id: formData.piezas.map((pieza) => pieza.id),
+      servicio_id: formData.servicios.map((servicio) => servicio.id), // Mapear solo los IDs de los servicios seleccionados
+      piezas_id: formData.piezas.map((pieza) => pieza.id), // Mapear solo los IDs de las piezas seleccionadas
       comentarios: formData.comentarios,
       costoTotal: formData.costoTotal,
-      tiempo: tiempo,
-      estatus: 'Pendiente',
     };
   
     console.log('Datos a enviar:', nuevosDatos);
   
-    // Envia la solicitud para agregar datos
     try {
       const response = await axios.post('http://localhost:3001/api/registros_mecanicos', nuevosDatos);
-  
-      // Verifica la respuesta del servidor
       if (response.data.success) {
-        // Ejecuta la función proporcionada para manejar la actualización local
-        onAgregarDatos(nuevosDatos);
-        // Reinicia los campos
-        reiniciarCampos();
+        onAgregarDatos(nuevosDatos); // Suponiendo que esta función actualiza la lista de registros en el componente padre
+        onClose(); // Cerrar el modal después de agregar los datos
       } else {
         console.error('Error al agregar datos:', response.data.error);
       }
     } catch (error) {
       console.error('Error al agregar datos:', error.response?.data || error.message);
-      // Muestra el error completo en la consola del cliente
-      console.error('Error completo del servidor:', error.response?.data?.fullError || error.message);
     }
   };
-  
-  
 
-  const reiniciarCampos = () => {
-    setFormData({
-      nombreCliente: '',
-      modeloVehiculo: '',
-      servicios: [],
-      piezas: [],
-      comentarios: '',
-      costoTotal: 0,
-    });
+  const handleInputChange = (e) => {
+    const { name, options } = e.target;
+    if (options) {
+      const values = Array.from(options).filter(option => option.selected).map(option => JSON.parse(option.value));
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: values,
+      }));
+    } else {
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: e.target.value,
+      }));
+    }
   };
 
   const calcularCostoTotal = () => {
     const costoServicios = formData.servicios.reduce((total, servicio) => total + servicio.precio, 0);
     const costoPiezas = formData.piezas.reduce((total, pieza) => total + pieza.costo, 0);
-
-    const costoTotal = costoServicios + costoPiezas;
-
-    setFormData((prevData) => ({
+    setFormData(prevData => ({
       ...prevData,
-      costoTotal: costoTotal,
+      costoTotal: costoServicios + costoPiezas,
     }));
   };
 
@@ -142,32 +118,22 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
         />
 
         <label>Servicios:</label>
-        {servicios.map((servicio) => (
-          <div key={servicio.id}>
-            <input
-              type="checkbox"
-              name="servicios"
-              value={JSON.stringify(servicio)}
-              checked={formData.servicios.some((s) => s.id === servicio.id)}
-              onChange={handleInputChange}
-            />
-            {servicio.servicio_nombre}
-          </div>
-        ))}
+        <select multiple name="servicios" value={formData.servicios.map(s => JSON.stringify(s))} onChange={handleInputChange} size={servicios.length}>
+          {servicios.map(servicio => (
+            <option key={servicio.id} value={JSON.stringify(servicio)}>
+              {servicio.servicio_nombre} - ${servicio.precio}
+            </option>
+          ))}
+        </select>
 
         <label>Piezas:</label>
-        {piezas.map((pieza) => (
-          <div key={pieza.id}>
-            <input
-              type="checkbox"
-              name="piezas"
-              value={JSON.stringify(pieza)}
-              checked={formData.piezas.some((p) => p.id === pieza.id)}
-              onChange={handleInputChange}
-            />
-            {pieza.nombre_pieza}
-          </div>
-        ))}
+        <select multiple name="piezas" value={formData.piezas.map(p => JSON.stringify(p))} onChange={handleInputChange} size={piezas.length}>
+          {piezas.map(pieza => (
+            <option key={pieza.id} value={JSON.stringify(pieza)}>
+              {pieza.nombre_pieza} - ${pieza.costo}
+            </option>
+          ))}
+        </select>
 
         <label>Comentarios:</label>
         <input
@@ -177,8 +143,7 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
           onChange={handleInputChange}
         />
 
-        <p>Tiempo transcurrido: {tiempo} segundos</p>
-        <p>Costo Total: {formData.costoTotal}</p>
+        <p>Costo Total: ${formData.costoTotal}</p>
         <button onClick={handleAgregar}>Agregar</button>
         <button onClick={onClose}>Cancelar</button>
       </div>
