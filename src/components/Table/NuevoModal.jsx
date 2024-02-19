@@ -6,6 +6,7 @@ const NuevoModal = ({ onCloseModal, onSave }) => {
     nombre: '',
     correo: '',
     telefono: '',
+    contrasena: '', // Nuevo campo para la contraseña
   });
 
   const [error, setError] = useState('');
@@ -36,12 +37,23 @@ const NuevoModal = ({ onCloseModal, onSave }) => {
           [field]: value,
         });
       }
+    } else if (field === 'contrasena') {
+      // Permitir cualquier caracter para la contraseña
+      setFormData({
+        ...formData,
+        [field]: value,
+      });
     }
   };
 
   const isFormValid = () => {
     // Validar que todos los campos estén llenos
-    return formData.nombre.trim() !== '' && formData.correo.trim() !== '' && formData.telefono.trim() !== '';
+    return (
+      formData.nombre.trim() !== '' &&
+      formData.correo.trim() !== '' &&
+      formData.telefono.trim() !== '' &&
+      formData.contrasena.trim() !== ''
+    );
   };
 
   const handleSaveClick = () => {
@@ -109,6 +121,16 @@ const NuevoModal = ({ onCloseModal, onSave }) => {
             placeholder="Ingrese el teléfono"
             value={formData.telefono}
             onChange={(e) => handleInputChange('telefono', e.target.value)}
+          />
+        </div>
+        <div className="input-group">
+          <label htmlFor="contrasena">Contraseña:</label>
+          <input
+            type="password"
+            id="contrasena"
+            placeholder="Ingrese la contraseña"
+            value={formData.contrasena}
+            onChange={(e) => handleInputChange('contrasena', e.target.value)}
           />
         </div>
         <div className="modal-buttons">

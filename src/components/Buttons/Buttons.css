@@ -8,7 +8,7 @@
 }
 
 .button {
-  background-color: rgba(0, 0, 0, 0.7); /* Ajusta el valor de la opacidad según tus preferencias */
+  background-color: rgba(165, 165, 165, 0.5); /* Ajusta el valor de la opacidad según tus preferencias */
   color: #fff;
   padding: 20px 40px;
   border: none;
@@ -20,11 +20,11 @@
 }
 
 .button:hover {
-  background-color: #ff9f43; /* Cambia el color al naranja al pasar el cursor */
+  background-color: #43fff6de; /* Cambia el color al naranja al pasar el cursor */
 }
 
 .button.active {
-  background-color: #ff9f04e8; /* Color naranja semi-transparente */
+  background-color: #04eaffe8; /* Color naranja semi-transparente */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Ajusta la sombra cuando el botón está activo */
 }
 

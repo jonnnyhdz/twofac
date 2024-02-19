@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from '../Header/Header';
 import AgregarDatosModal from './modal';
-import EditarDatosModal from './modalEditar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import EditarDatosModal from './editarModal'; // Asegúrate de importar el componente EditarDatosModal
 import './styles.css';
 
 function TableMecanical() {
@@ -12,53 +10,55 @@ function TableMecanical() {
   const [showAgregarModal, setShowAgregarModal] = useState(false);
   const [showEditarModal, setShowEditarModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
+  const [editedRow, setEditedRow] = useState({});
+  const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
 
   useEffect(() => {
-    fetchUsers();
+    const intervalId = setInterval(() => {
+      setCurrentTime((prevTime) => prevTime + 1);
+    }, 1000);
+  
+    return () => clearInterval(intervalId);
   }, []);
-
+  
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:3001/api/registros_mecanicos');
-      console.log('Respuesta de la API:', response.data);
-      setData(response.data || []);
-
+      const mainData = response.data;
+  
+      const detailedData = mainData.map((row) => {
+        const tiempoInicio = row.tiempo || 0;
+        const currentTime = Math.floor(Date.now() / 1000);
+        const tiempoTranscurrido = currentTime - tiempoInicio;
+  
+        return {
+          ...row,
+          tiempoTranscurrido,
+        };
+      });
+  
+      setData(detailedData || []);
     } catch (error) {
       console.error('Error al obtener datos de la API', error);
       setData([]);
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      // Llamada a la API para eliminar el registro
-      await axios.delete(`http://localhost:3001/api/registros_mecanicos/${id}`);
-
-      // Eliminar la fila
-      setData((prevData) => prevData.filter((row) => row.id !== id));
-
-      alert('Se borró correctamente');
-    } catch (error) {
-      console.error('Error al eliminar datos', error);
-      alert('Sucedió un error al intentar borrar los datos');
-    }
-  };
-
   const handleDeleteClick = async (row) => {
     try {
-      console.log(".a.a.a.a-", row)
+      console.log(".a.a.a.a-", row);
       if (!row.id || data.findIndex(item => item.id === row.id) === -1) {
         console.error('ID de registro no válido o no encontrado');
         alert('ID de registro no válido o no encontrado');
         return;
       }
-  
+
       console.log('Intentando eliminar registro con ID:', row.id);
-  
+
       const response = await axios.delete(`http://localhost:3001/api/registros_mecanicos/${row.id}`);
-  
+
       console.log('Respuesta del servidor:', response);
-  
+
       if (response.status === 200) {
         alert('Se borró correctamente');
         fetchUsers(); // Actualiza la tabla después de eliminar un registro
@@ -71,24 +71,6 @@ function TableMecanical() {
       alert('Sucedió un error al intentar borrar los datos');
     }
   };
-  
-
-
-  const handleStatusChange = async (id, isChecked) => {
-    const newStatus = isChecked ? 'Terminado' : 'En proceso';
-
-    try {
-      await axios.put(`http://localhost:3001/api/registros_mecanicos/${id}`, { estatus: newStatus });
-
-      setData((prevData) =>
-        prevData.map((row) =>
-          row.id === id ? { ...row, estatus: newStatus } : row
-        )
-      );
-    } catch (error) {
-      console.error('Error al cambiar el estatus', error);
-    }
-  };
 
   const handleOpenAgregarModal = () => {
     setShowAgregarModal(true);
@@ -99,12 +81,10 @@ function TableMecanical() {
     fetchUsers();
   };
 
+
   const handleAgregarDatos = async (nuevosDatos) => {
     try {
-      // Lógica de inserción en el modal
-      // ...
-
-      // Actualizar la lista de datos después de la inserción
+      // Lógica para agregar datos (si es necesario)
       fetchUsers();
     } catch (error) {
       console.error('Error al agregar datos', error);
@@ -112,28 +92,23 @@ function TableMecanical() {
   };
 
   const handleOpenEditarModal = (row) => {
-    setSelectedRow(row);
     setShowEditarModal(true);
+    setEditedRow(row);
   };
 
   const handleCloseEditarModal = () => {
-    setSelectedRow(null);
     setShowEditarModal(false);
+    setEditedRow({});
     fetchUsers();
   };
 
   const handleEditarDatos = async (datosEditados) => {
     try {
-      await axios.put(`http://localhost:3001/api/registros_mecanicos/${selectedRow.id}`, datosEditados);
-
-      setData((prevData) =>
-        prevData.map((row) =>
-          row.id === selectedRow.id ? { ...row, ...datosEditados } : row
-        )
-      );
-
-      alert('Se editó correctamente');
-      handleCloseEditarModal();
+      // Actualizar la fila correspondiente en el estado data
+      setData((prevData) => {
+        const updatedData = prevData.map((row) => (row.id === datosEditados.id ? datosEditados : row));
+        return updatedData;
+      });
     } catch (error) {
       console.error('Error al editar datos', error);
     }
@@ -143,10 +118,36 @@ function TableMecanical() {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-
+  
     const formatNumber = (num) => (num < 10 ? `0${num}` : num);
-
+  
     return `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(remainingSeconds)}`;
+  };
+  
+  
+
+  const handleTerminarClick = async (row) => {
+    try {
+      // Lógica para cambiar el estado a "Terminado" (si es necesario)
+      console.log('Intentando cambiar el estatus a "Terminado" para el registro con ID:', row.id);
+
+      const response = await axios.put(`http://localhost:3001/api/registros_mecanicos/${row.id}`, {
+        estatus: "Terminado",
+      });
+
+      console.log('Respuesta del servidor:', response);
+
+      if (response.status === 200) {
+        alert('Se cambió el estatus correctamente');
+        fetchUsers(); // Actualiza la tabla después de cambiar el estatus
+      } else {
+        console.error('Error al cambiar el estatus');
+        alert('Sucedió un error al intentar cambiar el estatus');
+      }
+    } catch (error) {
+      console.error('Error al cambiar el estatus', error);
+      alert('Sucedió un error al intentar cambiar el estatus');
+    }
   };
 
   return (
@@ -159,7 +160,7 @@ function TableMecanical() {
         <EditarDatosModal
           onClose={handleCloseEditarModal}
           onEditarDatos={handleEditarDatos}
-          selectedRow={selectedRow}
+          editedRow={editedRow}
         />
       )}
 
@@ -175,58 +176,94 @@ function TableMecanical() {
               <th>Modelo Vehiculo</th>
               <th>Servicio</th>
               <th>Piezas</th>
+              <th>Servicios Extras</th>
+              <th>Piezas Extras</th>
               <th>Comentarios</th>
               <th>Tiempo</th>
               <th>Costo Total</th>
-              <th>Estatus</th>
+              <th>Estatus</th> {/* Nueva columna */}
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-          {data.map((row) => (
-  <tr key={row.id}>
-    <th scope="row">{row.id}</th>
-    <td>{row.nombreCliente}</td>
-    <td>{row.modeloVehiculo}</td>
-    <td>
-      {row.servicio_nombre}
-      <br />
-      {"costo: " + row.precio}
-    </td>
-    <td>
-      {row.nombre_pieza} <br />
-      {"costo: " + row.costo}
-    </td>
-    <td>{row.comentarios}</td>
-    <td>{formatTime(row.tiempo)}</td>
-    <td>{row.costoTotal}</td>
-    <td>
-      <input
-        type="checkbox"
-        checked={row.estatus === 'Terminado'}
-        onChange={(e) => handleStatusChange(row.id, e.target.checked)}
-      />
-      {row.estatus === 'Pendiente' ? 'En proceso' : 'Terminado'}
-    </td>
-    <td>
-      <button className="icon-button" onClick={() => handleOpenEditarModal(row)}>
-        <FontAwesomeIcon icon={faEdit} />
-      </button>{" "}
-      <button className="icon-button" onClick={() => handleDeleteClick(row)}>
-        <FontAwesomeIcon icon={faTrash} />
-      </button>
-    </td>
-  </tr>
-))}
+            {data.map((row) => (
+              <tr key={row.id}>
+                <th scope="row">{row.id}</th>
+                <td>{row.nombreCliente}</td>
+                <td>{row.modeloVehiculo}</td>
+                <td>
+                  {row.servicio_nombre && (
+                    <>
+                      {row.servicio_nombre}
+                      <br />
+                      {"costo: " + row.servicio_precio}
+                      <br />
+                    </>
+                  )}
+                </td>
+                <td>
+                  {row.nombre_pieza && (
+                    <>
+                      {row.nombre_pieza}
+                      <br />
+                      {"costo: " + row.pieza_costo}
+                      <br />
+                    </>
+                  )}
+                </td>
+                <td>
+                  {row.serviciosAdicionales &&
+                    row.serviciosAdicionales.map((servicio) => (
+                      <div key={servicio.id}>
+                        {servicio.nombre}
+                        <br />
+                        {"costo: " + servicio.precio}
+                      </div>
+                    ))}
+                </td>
+                <td>
+                  {row.piezasAdicionales &&
+                    row.piezasAdicionales.map((pieza) => (
+                      <div key={pieza.id}>
+                        {pieza.nombre}
+                        <br />
+                        {"costo: " + pieza.costo}
+                      </div>
+                    ))}
+                </td>
+                <td>{row.comentarios}</td>
+                <td>{formatTime(row.tiempoTranscurrido)}</td>
+                <td>{row.costoTotal}</td>
+                <td>{row.estatus || "En proceso"}</td>
+                <td>
+                  {(row.estatus === "En proceso" || row.estatus === null) && (
+                    <>
+                      <button className="icon-button" onClick={() => handleOpenEditarModal(row)}>
+                        Editar
+                      </button>{" "}
+                      <button className="icon-button" onClick={() => handleDeleteClick(row)}>
+                        Eliminar
+                      </button>{" "}
+                      {row.estatus === "En proceso" && (
+                        <button className="icon-button" onClick={() => handleTerminarClick(row)}>
+                          Terminar
+                        </button>
+                      )}
+                    </>
+                  )}
+                </td>
 
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
+
       <div className="add-button-row">
         <div className="add-button-cell"></div>
       </div>
     </div>
   );
-}
+};
 
 export default TableMecanical;

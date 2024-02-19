@@ -47,23 +47,23 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
   };
 
   const handleAgregar = async () => {
-    // Preparar los datos para enviar, incluyendo el mapeo de servicios y piezas seleccionados
+    const tiempoInicio = Math.floor(Date.now() / 1000); // Obtener el tiempo actual en segundos
+  
     const nuevosDatos = {
       nombreCliente: formData.nombreCliente,
       modeloVehiculo: formData.modeloVehiculo,
-      servicio_id: formData.servicios.map((servicio) => servicio.id), // Mapear solo los IDs de los servicios seleccionados
-      piezas_id: formData.piezas.map((pieza) => pieza.id), // Mapear solo los IDs de las piezas seleccionadas
+      servicio_id: formData.servicios.map((servicio) => servicio.id),
+      piezas_id: formData.piezas.map((pieza) => pieza.id),
       comentarios: formData.comentarios,
       costoTotal: formData.costoTotal,
+      tiempo: tiempoInicio, // Agregar el tiempo de inicio al enviar los nuevos datos
     };
-  
-    console.log('Datos a enviar:', nuevosDatos);
   
     try {
       const response = await axios.post('http://localhost:3001/api/registros_mecanicos', nuevosDatos);
       if (response.data.success) {
-        onAgregarDatos(nuevosDatos); // Suponiendo que esta función actualiza la lista de registros en el componente padre
-        onClose(); // Cerrar el modal después de agregar los datos
+        onAgregarDatos(nuevosDatos);
+        onClose();
       } else {
         console.error('Error al agregar datos:', response.data.error);
       }
@@ -71,6 +71,7 @@ function AgregarDatosModal({ onClose, onAgregarDatos }) {
       console.error('Error al agregar datos:', error.response?.data || error.message);
     }
   };
+  
 
   const handleInputChange = (e) => {
     const { name, options } = e.target;

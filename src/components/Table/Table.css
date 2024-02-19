@@ -6,11 +6,8 @@ table {
   margin-bottom: 10px;
   border-radius: 10px;
   overflow: hidden;
-  background-color: #fca30a; /* Actualizado al color verde suave */
+  background-color: #0afccc; /* Actualizado al color verde suave */
 }
-
-
-
 
 th, td {
   border: none; /* Elimina las líneas de las celdas */
@@ -25,12 +22,12 @@ th, td {
   margin-top: 10px;
   border-radius: 10px;
   overflow: hidden;
-  background-color: #feb50c; /* Actualizado al color verde suave */
+  background-color: #0dffd3; /* Actualizado al color verde suave */
 }
 /* src/components/Table/Table.css */
 button.add-button {
-  background-color: #ffae00;
-  color: #000;
+  background-color: #0dffd3;
+  color: rgba(165, 165, 165, 0.5);
   padding: 10px 20px; /* Ajustar el padding para hacer el botón más compacto */
   border: none; /* Elimina el borde del botón */
   border-radius: 15px; /* Ajustar el radio de los bordes del botón */

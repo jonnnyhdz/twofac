@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import './Modal.css';
 
-
 const Modal = ({ row, onCloseModal, onSave }) => {
-  // Estado local para rastrear la información actualizada
   const [formData, setFormData] = useState({
     nombre: row?.nombre || '',
     correo: row?.correo || '',
     telefono: row?.telefono || '',
+    contrasena: row?.contrasena||'', // Nuevo campo para la contraseña
   });
 
-  // Función para manejar los cambios en los campos de entrada
   const handleInputChange = (field, value) => {
     setFormData({
       ...formData,
@@ -18,16 +16,13 @@ const Modal = ({ row, onCloseModal, onSave }) => {
     });
   };
 
-  // Función para manejar el clic en el botón "Guardar"
   const handleSaveClick = () => {
-    // Llama a la función onSave pasando los datos actualizados
     onSave(row.id, formData);
-    // Cierra el modal
     onCloseModal();
   };
 
   if (!row) {
-    return null; // No hay fila seleccionada, no mostrar el modal
+    return null;
   }
 
   return (
@@ -64,6 +59,16 @@ const Modal = ({ row, onCloseModal, onSave }) => {
             onChange={(e) => handleInputChange('telefono', e.target.value)}
           />
         </div>
+        <div className="input-group">
+          <label htmlFor="contrasena">Contraseña:</label>
+          <input
+            type="password"
+            id="contrasena"
+            placeholder="Ingrese la contraseña"
+            value={formData.contrasena}
+            onChange={(e) => handleInputChange('contrasena', e.target.value)}
+          />
+        </div>
         <div className="modal-buttons">
           <button onClick={onCloseModal}>Cancelar</button>
           <button onClick={handleSaveClick}>Guardar</button>
@@ -71,6 +76,6 @@ const Modal = ({ row, onCloseModal, onSave }) => {
       </div>
     </div>
   );
-}
+};
 
 export default Modal;

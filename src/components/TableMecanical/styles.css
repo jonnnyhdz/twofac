@@ -5,7 +5,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background-image: url('../../../public/img/NARANJA.jpg'); /* Agrega la imagen de fondo */
+  background-image: url('https://i0.wp.com/grupocarman.com/blog/wp-content/uploads/2018/09/Motor11.jpg?resize=760%2C570&ssl=1'); /* Agrega la imagen de fondo */
   background-size: cover; /* Ajusta el tamaño de la imagen de fondo */
   background-repeat: no-repeat; /* Evita la repetición de la imagen */
   background-position: center; /* Centra la imagen en el fondo */
@@ -20,7 +20,7 @@ body {
 }
 
 .header {
-  background-color: rgba(0, 0, 0, 0.8); /* Fondo negro semi transparente para el encabezado */
+  background-color: rgba(86, 84, 84, 0.8); /* Fondo negro semi transparente para el encabezado */
   padding: 25px 50px;
   border-radius: 15px;
   display: flex;
@@ -35,7 +35,7 @@ body {
 }
 
 .logout-button {
-  background-color: rgba(255, 159, 67, 0.7); /* Naranja semi transparente */
+  background-color: rgba(67, 255, 214, 0.7); /* Naranja semi transparente */
   color: #fff; /* Texto blanco */
   padding: 8px 15px;
   border: none;
@@ -45,7 +45,7 @@ body {
 }
 
 .logout-button:hover {
-  background-color: #ff9f43; /* Naranja al pasar el cursor */
+  background-color: #136eed; /* Naranja al pasar el cursor */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al pasar el cursor */
 }
 
@@ -53,11 +53,11 @@ body {
 .my-table {
   border-collapse: collapse;
   border: 1px solid #2d2d2d;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 6px rgba(165, 165, 165, 0.5);
   border-radius: 0.5rem;
   width: 100%;
   margin-top: 1rem;
-  background-color: rgba(0, 0, 0, 0.8); /* Hace la tabla transparente de color negro */
+  background-color: rgba(165, 165, 165, 0.5); /* Hace la tabla transparente de color negro */
   color: white; /* Cambia el color del texto a blanco */
 }
 

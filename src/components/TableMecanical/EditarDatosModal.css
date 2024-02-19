@@ -14,7 +14,7 @@
   }
   
   .modal {
-    background: rgba(255, 140, 0, 0.515);
+    background: rgba(2, 238, 255, 0.652);
     padding: 20px;
     border-radius: 10px;
     text-align: center;
@@ -46,12 +46,12 @@
   }
   
   .modal .save-button {
-    background-color: #4caf50; /* Color verde, puedes cambiarlo según tu preferencia */
+    background-color: #4c9eaf; /* Color verde, puedes cambiarlo según tu preferencia */
     color: #fff;
   }
   
   .modal .cancel-button {
-    background-color: #f44336; /* Color rojo, puedes cambiarlo según tu preferencia */
+    background-color: #e67068; /* Color rojo, puedes cambiarlo según tu preferencia */
     color: #fff;
   }
   

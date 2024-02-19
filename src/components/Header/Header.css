@@ -1,7 +1,6 @@
 body {
   margin: 0;
   padding: 0;
-  background-image: url('../../../public/img/NARANJA.jpg'); /* Ajusta la ruta según tu estructura de carpetas */
   background-size: cover; /* Ajusta el tamaño de la imagen */
   background-repeat: no-repeat; /* Evita la repetición de la imagen */
   background-position: center; /* Centra la imagen en el fondo */
@@ -15,7 +14,7 @@ body {
 }
 
 .header {
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo negro semi transparente para el encabezado */
+  background-color: rgba(165, 165, 165, 0.5); /* Fondo negro semi transparente para el encabezado */
   padding: 25px 50px;
   border-radius: 15px;
   display: flex;
@@ -30,7 +29,7 @@ body {
 }
 
 .logout-button {
-  background-color: rgba(255, 159, 67, 0.7); /* Naranja semi transparente */
+  background-color: rgba(67, 255, 202, 0.7); /* Naranja semi transparente */
   color: #fff; /* Texto blanco */
   padding: 8px 15px;
   border: none;
@@ -39,7 +38,8 @@ body {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+
 .logout-button:hover {
-  background-color: #ff9f43; /* Naranja al pasar el cursor */
+  background-color: #43ffe6; /* Naranja al pasar el cursor */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al pasar el cursor */
 }

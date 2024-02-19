@@ -1,0 +1,50 @@
+/* IngresarToken.css */
+.ingresar-token-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: url('https://logosoft.com.tr/uploads/files/19-12-2022/c88408a1.jpg') center/cover no-repeat;
+}
+
+.ingresar-token-card {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 50px rgb(255, 255, 255);
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+label {
+  color: aliceblue;
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
+.token-submit-button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.token-submit-button:hover {
+  background-color: #2980b9;
+}
