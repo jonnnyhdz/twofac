@@ -96,7 +96,7 @@ const Table = () => {
     if (field === "roles") {
       const userId = row.id;
       const activar2 = value ? 1 : 0; // Debe ser 1 si está marcado, 0 si está desmarcado
-    
+
       console.log(
         `Llamando a la API de roles con userId: ${userId} y activar: ${activar2}`
       );
@@ -117,6 +117,33 @@ const Table = () => {
         })
         .catch((error) => {
           console.error("Error en la llamada a la API de roles:", error);
+        });
+    }
+    
+    if (field === "proveedor") {
+      const userId = row.id;
+      const proveedorValue = value ? 1 : 0;
+
+      console.log(
+        `Llamando a la API de proveedor con userId: ${userId} y proveedor: ${proveedorValue}`
+      );
+      fetch(`http://localhost:3001/api/proveedor/${row.correo}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ proveedor: proveedorValue }), // Usa el nombre correcto del campo
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            console.log("Proveedor actualizado correctamente");
+          } else {
+            console.error("Error al actualizar el proveedor:", data.error);
+          }
+        })
+        .catch((error) => {
+          console.error("Error en la llamada a la API de proveedor:", error);
         });
     }
   };
@@ -218,6 +245,7 @@ const Table = () => {
             <th>Contraseña</th>
             <th>Multifactor</th>
             <th>Admin</th>
+            <th>Proveedor</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -285,19 +313,29 @@ const Table = () => {
                 />
               </td>
               <td>
-              <input
+                <input
                   type="checkbox"
                   checked={row.roles === 1}
                   onChange={(e) =>
-                    handleInputChange(
-                      row,
-                      "roles",
-                      e.target.checked ? 1 : 0,
-                      4
-                    )
+                    handleInputChange(row, "roles", e.target.checked ? 1 : 0, 4)
                   }
                   onBlur={() => handleBlur(row, 5)}
-                  
+                />
+              </td>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={row.proveedor === 1}
+                  onChange={(e) =>
+                    handleInputChange(
+                      row,
+                      "proveedor",
+                      e.target.checked ? 1 : 0,
+                      6
+                    )
+                  }
+                  onBlur={() => handleBlur(row, 6)}
+                  readOnly={!row.edited[6]}
                 />
               </td>
               <td>

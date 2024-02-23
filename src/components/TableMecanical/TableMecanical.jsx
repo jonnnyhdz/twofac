@@ -4,39 +4,67 @@ import Header from '../Header/Header';
 import AgregarDatosModal from './modal';
 import EditarDatosModal from './editarModal'; // Asegúrate de importar el componente EditarDatosModal
 import './styles.css';
+import Boton from '../Buttons/Boton';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
-function TableMecanical() {
+
+function TableMecanical(props) {
+  const { correo } = useParams();
   const [data, setData] = useState([]);
   const [showAgregarModal, setShowAgregarModal] = useState(false);
   const [showEditarModal, setShowEditarModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const [editedRow, setEditedRow] = useState({});
   const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
+  const [proveedor, setProveedor] = useState(0); // Agregado para almacenar el valor de proveedor
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime((prevTime) => prevTime + 1);
     }, 1000);
-  
+
     return () => clearInterval(intervalId);
   }, []);
-  
+  useEffect(() => {
+    // Consulta la API para obtener el valor actual de proveedor
+    const fetchProveedor = async () => {
+      try {
+        // Verifica si props.correo tiene un valor antes de realizar la solicitud
+        if (!correo) {
+          console.error('Correo no definido');
+          return;
+        }
+
+        const response = await axios.get(`http://localhost:3001/api/verificarproveedor/${correo}`);
+        const proveedorValue = response.data.proveedor;
+        // Actualiza el estado de proveedor
+        setProveedor(proveedorValue);
+      } catch (error) {
+        console.error('Error al obtener datos de proveedor', error);
+      }
+    };
+
+    fetchProveedor();
+  }, [correo]);
+
+
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:3001/api/registros_mecanicos');
       const mainData = response.data;
-  
+
       const detailedData = mainData.map((row) => {
         const tiempoInicio = row.tiempo || 0;
         const currentTime = Math.floor(Date.now() / 1000);
         const tiempoTranscurrido = currentTime - tiempoInicio;
-  
+
         return {
           ...row,
           tiempoTranscurrido,
         };
       });
-  
+
       setData(detailedData || []);
     } catch (error) {
       console.error('Error al obtener datos de la API', error);
@@ -118,13 +146,13 @@ function TableMecanical() {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-  
+
     const formatNumber = (num) => (num < 10 ? `0${num}` : num);
-  
+
     return `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(remainingSeconds)}`;
   };
-  
-  
+
+
 
   const handleTerminarClick = async (row) => {
     try {
@@ -163,7 +191,15 @@ function TableMecanical() {
           editedRow={editedRow}
         />
       )}
-
+      <br/>
+      <br/>
+      <br/>
+      <Link to={`/Piezas/${correo}`}>       
+       <button className={`BotonPiezas ${proveedor == 1 ? '' : 'disabled'}`} disabled={proveedor !== 1}>
+        Piezas
+      </button>
+      </Link>
+      <br/>
       <button className="add-button" onClick={handleOpenAgregarModal}>
         Agregar Servicio
       </button>

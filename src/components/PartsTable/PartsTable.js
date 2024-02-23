@@ -6,8 +6,11 @@ import EditarModal from './EditarModal.jsx';
 import './PartsTable.css';
 import Buttons from '../Buttons/Buttons.js';
 import Header from '../Header/Header.js';
+import Boton from '../Buttons/Boton.js';
+import { Link, useParams } from 'react-router-dom';
 
 const PartsTable = () => {
+  const { correo } = useParams();
   const [parts, setParts] = useState([]);
   const [selectedPart, setSelectedPart] = useState(null);
   const [isUpdateModalVisible, setUpdateModalVisible] = useState(false);
@@ -85,7 +88,13 @@ const PartsTable = () => {
   return (
     <div>
       <Header />
-      <Buttons />
+      <br/>
+      <h1>Piezas</h1>
+      <Link to={`/VistaMec/${correo}`}>
+  <button className='BotonPiezas'>Mecanicos</button>
+</Link>
+      <br/>
+      <br/>
       <table className="parts-table">
         <thead>
           <tr>

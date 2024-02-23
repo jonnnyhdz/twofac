@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './Buttons.css';
 
-const Buttons = () => {
-  const { correo } = useParams();
+const Boton = () => {
   const [selectedButton, setSelectedButton] = useState(null);
 
   const handleButtonClick = (buttonName) => {
@@ -20,7 +19,8 @@ const Buttons = () => {
 
   return (
     <div className="buttons-container">
-<Link to={`/Mecanicos/${correo}`}
+      <Link
+        to="/VistaMec"
         className={`button ${selectedButton === 'Mecanicos' ? 'selected' : ''}`}
         onClick={() => handleButtonClick('Mecanicos')}
         onMouseEnter={() => handleButtonMouseEnter('Mecanicos')}
@@ -28,17 +28,8 @@ const Buttons = () => {
       >
         Mecánicos
       </Link>
-      <Link
-        to="/Servicios"
-        className={`button ${selectedButton === 'Servicios' ? 'selected' : ''}`}
-        onClick={() => handleButtonClick('Servicios')}
-        onMouseEnter={() => handleButtonMouseEnter('Servicios')}
-        onMouseLeave={handleButtonMouseLeave}
-      >
-        Servicios
-      </Link>
     </div>
   );
 }
 
-export default Buttons;
+export default Boton;

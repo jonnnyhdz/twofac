@@ -49,6 +49,11 @@ body {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al pasar el cursor */
 }
 
+h1{
+  color:#ffffff;
+  text-align: center;
+}
+
 /* Estilos de la tabla */
 table {
   width: calc(100% - 40px);
@@ -90,4 +95,30 @@ button.add-button {
   margin-right: 20px; /* Ajusta el margen derecho para alejar del borde */
   margin-bottom: 10px; /* Ajusta la separación desde la parte inferior */
   float: right; /* Alinea el botón a la derecha */
+}
+
+
+.BotonPiezas {
+  margin-left: 60px;
+  /* Estilos generales para el botón */
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: #179dc6;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.BotonPiezas.disabled {
+  /* Estilos cuando el botón está deshabilitado */
+  background-color: #d3d3d3;
+  color: #a9a9a9;
+  cursor: not-allowed;
+}
+
+/* Estilo para el enlace */
+.LinkEstilo {
+  text-decoration: none;
+  color: inherit;
 }

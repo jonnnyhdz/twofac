@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import PrivateRoute from "./PrivateRoute.js";
 import Login from "./components/Login/Login.js";
@@ -14,17 +9,17 @@ import Table from "./components/Table/Table.js";
 import ServicesTable from "./components/ServicesTable/ServicesTable.js";
 import PartsTable from "./components/PartsTable/PartsTable.js";
 import TableMecanical from "./components/TableMecanical/TableMecanical.jsx";
-
 import IngresarToken from "./components/Login/IngresarToken.jsx";
+import Boton from "./components/Buttons/Boton.js";
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
-
+  const { correo = '' } = useParams();  // Proporciona un valor predeterminado para correo
+// console.log(correo);
   const handleLogin = () => {
     console.log("Usuario ha iniciado sesión");
     setAuthenticated(true);
   };
-
 
   return (
     <Router>
@@ -59,7 +54,16 @@ function App() {
             }
           />
           <Route
-            path="/Mecanicos"
+            path="/Boton"
+            element={
+              <PrivateRoute
+                element={<Boton />}
+                isAuthenticated={authenticated}
+              />
+            }
+          />
+          <Route
+            path="/Mecanicos/:correo"
             element={
               <PrivateRoute
                 element={<Table />}
@@ -77,7 +81,7 @@ function App() {
             }
           />
           <Route
-            path="/Piezas"
+            path="/Piezas/:correo"
             element={
               <PrivateRoute
                 element={<PartsTable />}
@@ -85,18 +89,17 @@ function App() {
               />
             }
           />
-
           <Route
-            path="/VistaMec"
+            path="/VistaMec/:correo"
             element={
               <PrivateRoute
-                element={<TableMecanical />}
+                element={<TableMecanical correo={correo} />}  // Pasa 'correo' como prop
                 isAuthenticated={authenticated}
               />
             }
+            //<Route path="/VistaMec/:correoElectronico" component={VistaMecComponent} />
           />
-                    <Route path="*" element={<Navigate to="/" replace />} />
-
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>
