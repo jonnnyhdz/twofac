@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import IngresarToken from './IngresarToken.jsx';
+import bcrypt from 'bcryptjs';
+
 
 function enviarCorreo(email) {
   var xhr = new XMLHttpRequest();
